@@ -11,6 +11,7 @@ from datetime import datetime
 def load_prediction_model(model_path):
     try:
         model = load_model(model_path)
+        st.success(f'Model loaded successfully from {model_path}')
         return model
     except Exception as e:
         st.error(f'Error loading model: {e}')
@@ -18,7 +19,7 @@ def load_prediction_model(model_path):
 
 # Function to download stock data
 def get_stock_data(ticker, start, end):
-    data = yf.download(ticker, start=start, end=end)
+    data = yf.download(ticker, start=start, end=end, progress=False)
     return data
 
 # Function to scale data
@@ -134,6 +135,8 @@ if model:
     st.subheader('Original Price vs Predicted Price')
     plot_data([y_test.flatten(), predictions.flatten()], 'Original vs Predicted Price', 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
 
+    # Additional Features
+    st.subheader('Additional Features')
 
     # RSI Calculation
     stock_data['RSI'] = calculate_rsi(stock_data)
