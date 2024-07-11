@@ -84,10 +84,6 @@ X_test, y_test = create_datasets(scaled_test_data, 100)
 model_path = 'Stock_Predictions_Model.keras'
 model = load_prediction_model(model_path)
 
-st.sidebar.subheader('Debugging Information')
-st.sidebar.write(f'X_test shape: {X_test.shape}')
-st.sidebar.write(f'X_test dtype: {X_test.dtype}')
-
 if model:
     try:
         predictions = model.predict(X_test)
