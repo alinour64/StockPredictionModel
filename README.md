@@ -1,70 +1,27 @@
-Stock Market Prediction Application
-This application predicts stock prices and provides visual analysis using various technical indicators. It is built with several tools and libraries, including TensorFlow, YFinance, Plotly, and Streamlit. The application fetches historical stock data, scales it, prepares it for prediction, and visualizes the results along with technical indicators such as moving averages, RSI, and Bollinger Bands.
+**Stock Market Prediction Application**
 
-Tools Used
-TensorFlow: Used for loading the pre-trained prediction model.
-YFinance: Utilized for fetching historical stock data.
-Plotly: Replaced Matplotlib for creating interactive graphs and plots.
-Numpy: Used for numerical operations and handling arrays.
-Pandas: Used for data manipulation and analysis.
-Streamlit: Used for creating the web application and interactive UI.
-Installation
-Clone the repository.
-git clone <repository-url>
-cd <repository-directory>
+**Overview**
+This application predicts stock prices and provides visual analysis using various technical indicators. The application fetches historical stock data, scales it, prepares it for prediction, and visualizes the results along with technical indicators such as moving averages, RSI, and Bollinger Bands. The goal is to help users make informed decisions based on the predicted stock trends and technical analysis.
+**Tools Used**
+1.	TensorFlow: For loading and utilizing the pre-trained prediction model.
+2.	YFinance: For fetching historical stock data.
+3.	Plotly: For creating interactive graphs and plots.
+4.	Numpy: For numerical operations and handling arrays.
+5.	Pandas: For data manipulation and analysis.
+6.	Streamlit: For creating the web application and interactive UI.
+**Program Features**
+1.	Stock Data Retrieval: Fetches historical stock data for a specified ticker and date range.
+2.	Data Preparation and Scaling: Splits the data into training and testing sets, scales the data using MinMaxScaler, and prepares it for prediction.
+3.	Model Loading and Prediction: Loads a pre-trained TensorFlow model and makes predictions on the test data.
+4.	Visualization: Provides interactive visualizations of stock prices, predictions, and technical indicators such as moving averages, RSI, and Bollinger Bands using Plotly.
+5.	Technical Indicators: Calculates and displays Relative Strength Index (RSI) and Bollinger Bands.
+**Development Process**
+1.	Model Training: The prediction model was initially trained using Jupyter Notebooks.
+2.	Application Integration: The trained model and data processing steps were integrated into a Streamlit application for an interactive user experience.
+3.	Visualization: Interactive visualizations were implemented using Plotly to enable users to interact with the data and gain insights.
+4.	Deployment: The application was deployed on Streamlit, with a requirements.txt file created to ensure all dependencies are met for smooth operation.
+**Challenges and Solutions**
+1.	Training the Model: The model was trained using Jupyter Notebooks and later adapted for integration with the Streamlit application.
+2.	Interactive Visualization: Plotly was selected over Matplotlib for its superior interactive capabilities, enhancing the user experience.
+3.	Deployment: The application was successfully deployed on Streamlit, with careful attention to dependency management to ensure compatibility and functionality.
 
-Create a virtual environment and activate it.
-python3 -m venv venv
-source venv/bin/activate
-
-Install the required dependencies.
-pip install -r requirements.txt
-
-Usage
-Run the Streamlit application.
-streamlit run app.py
-Open your web browser and go to http://localhost:8501 to view the application.
-
-Application Workflow
-Header and User Inputs:
-The application begins with a header and allows the user to input a stock ticker, start date, and end date.
-
-Fetching Stock Data:
-The application fetches historical stock data for the specified ticker and date range using YFinance.
-
-Displaying Stock Data:
-The fetched stock data is displayed on the Streamlit interface for user review.
-
-Data Preparation and Scaling:
-The application prepares the data by splitting it into training and testing sets, then scales the data using MinMaxScaler.
-
-Loading the Prediction Model:
-The pre-trained prediction model is loaded from a specified path.
-
-Making Predictions:
-If the model is successfully loaded, the application makes predictions on the test data.
-
-Visualizing Results:
-The application visualizes the original and predicted prices along with various technical indicators such as moving averages, RSI, and Bollinger Bands using Plotly for interactive plots.
-
-Features
-Stock Data Retrieval: Fetches and displays historical stock data.
-Data Scaling and Preparation: Scales data and prepares it for prediction.
-Model Loading and Prediction: Loads a pre-trained TensorFlow model and makes predictions on the test data.
-Interactive Plots: Provides interactive visualizations of stock prices, predictions, and technical indicators.
-Technical Indicators: Calculates and displays RSI and Bollinger Bands.
-Challenges and Solutions
-Training the Model:
-
-The model was initially trained using Jupyter Notebooks and later integrated into the Streamlit application.
-Interactive Visualization:
-
-Plotly was chosen over Matplotlib to enable better interactive capabilities for data visualization.
-Deployment:
-
-The application was deployed on Streamlit. A requirements.txt file was created to ensure all dependencies are met for smooth deployment.
-Development Process
-Model Training: Developed and trained the prediction model using Jupyter Notebooks.
-Application Integration: Integrated the model and data processing steps into a Streamlit application.
-Visualization: Implemented interactive visualizations using Plotly.
-Deployment: Deployed the application on Streamlit, ensuring all dependencies were correctly specified.
