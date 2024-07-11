@@ -6,16 +6,24 @@ This application predicts stock prices and provides visual analysis using variou
 
 **Tools Used**
 
-1. **TensorFlow**: For loading and utilizing the pre-trained prediction model.
-2. **YFinance**: For fetching historical stock data.
-3. **Plotly**: For creating interactive graphs and plots.
-4. **Numpy**: For numerical operations and handling arrays.
-5. **Pandas**: For data manipulation and analysis.
-6. **Streamlit**: For creating the web application and interactive UI.
+1. **TensorFlow**:
+    - An open-source platform for machine learning developed by Google. It is used for building and training machine learning models. In this application, TensorFlow is used to load and utilize the pre-trained prediction model.
+2. **YFinance**:
+    - A Python library that provides an easy way to download historical market data from Yahoo Finance. This library is used to fetch historical stock data for analysis and prediction.
+3. **Plotly**:
+    - An open-source graphing library that makes interactive, publication-quality graphs online. Plotly is used in this application to create interactive graphs and plots for data visualization.
+4. **Numpy**:
+    - A fundamental package for scientific computing in Python. It provides support for large multi-dimensional arrays and matrices, along with a collection of mathematical functions to operate on these arrays. Numpy is used for numerical operations and handling arrays in this application.
+5. **Pandas**:
+    - An open-source data analysis and manipulation tool built on top of the Python programming language. It is used for data manipulation and analysis, providing data structures like DataFrame for working with structured data.
+6. **Streamlit**:
+    - An open-source app framework for Machine Learning and Data Science teams to create beautiful, performant apps in hours, not weeks. Streamlit is used for creating the web application and interactive user interface.
+7. **Scikit-learn (MinMaxScaler)**:
+    - A machine learning library for Python that provides simple and efficient tools for data mining and data analysis. MinMaxScaler from Scikit-learn is used to scale data to a range between 0 and 1.
 
 **Program Features**
 
-1. **Stock Data Retrieval**: Fetches historical stock data for a specified ticker and date range.
+1. **Stock Data Retrieval**: Fetches historical stock data for a specified ticker and date range using YFinance.
 2. **Data Preparation and Scaling**: Splits the data into training and testing sets, scales the data using MinMaxScaler, and prepares it for prediction.
     - **Training and Testing Split**: 80% of the data is used for training, and 20% is used for testing.
 3. **Model Loading and Prediction**: Loads a pre-trained TensorFlow model and makes predictions on the test data.
