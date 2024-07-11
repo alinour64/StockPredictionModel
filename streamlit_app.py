@@ -11,7 +11,6 @@ from datetime import datetime
 def load_prediction_model(model_path):
     try:
         model = load_model(model_path)
-        st.success(f'Model loaded successfully from {model_path}')
         return model
     except Exception as e:
         st.error(f'Error loading model: {e}')
