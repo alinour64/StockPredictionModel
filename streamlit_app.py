@@ -3,11 +3,11 @@ import pandas as pd
 import yfinance as yf
 from tensorflow.keras.models import load_model
 import streamlit as st
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime
 
-@st.cache_resource(show_spinner=False)
+
 def load_prediction_model(model_path):
     try:
         model = load_model(model_path)
@@ -39,11 +39,13 @@ def create_datasets(data, window_size):
     return np.array(X), np.array(y)
 
 def plot_data(data_series, xlabel, ylabel, legends):
-    fig = go.Figure()
+    plt.figure(figsize=(10, 6))
     for series, label in zip(data_series, legends):
-        fig.add_trace(go.Scatter(y=series, mode='lines', name=label))
-    fig.update_layout(xaxis_title=xlabel, yaxis_title=ylabel)
-    st.plotly_chart(fig, use_container_width=True)
+        plt.plot(series, label=label)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.legend()
+    st.pyplot(plt)
 
 def calculate_rsi(data, window=14):
     delta = data['Close'].diff()
