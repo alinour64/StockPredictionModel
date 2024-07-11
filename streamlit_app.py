@@ -3,7 +3,7 @@ import pandas as pd
 import yfinance as yf
 from tensorflow.keras.models import load_model
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime
 
@@ -38,13 +38,11 @@ def create_datasets(data, window_size):
     return np.array(X), np.array(y)
 
 def plot_data(data_series, xlabel, ylabel, legends):
-    plt.figure(figsize=(10, 6))
+    fig = go.Figure()
     for series, label in zip(data_series, legends):
-        plt.plot(series, label=label)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.legend()
-    st.pyplot(plt)
+        fig.add_trace(go.Scatter(x=series.index, y=series, mode='lines', name=label))
+    fig.update_layout(xaxis_title=xlabel, yaxis_title=ylabel)
+    st.plotly_chart(fig)
 
 def calculate_rsi(data, window=14):
     delta = data['Close'].diff()
@@ -110,7 +108,7 @@ if model:
         plot_data([stock_data['Close'], ma_100, ma_200], 'Date', 'Price', ['Price', 'MA100', 'MA200'])
 
         st.subheader('Original Price vs Predicted Price')
-        plot_data([y_test.flatten(), predictions.flatten()], 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
+        plot_data([pd.Series(y_test.flatten(), index=test_data.index), pd.Series(predictions.flatten(), index=test_data.index)], 'Date', 'Price', ['Original Price', 'Predicted Price'])
 
         st.subheader('Additional Features')
 
