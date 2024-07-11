@@ -106,8 +106,6 @@ if model:
         st.subheader('Original Price vs Predicted Price')
         plot_data([pd.Series(y_test.flatten(), index=test_data.index), pd.Series(predictions.flatten(), index=test_data.index)], 'Date', 'Price', ['Original Price', 'Predicted Price'])
 
-        st.subheader('Additional Features')
-
         stock_data['RSI'] = calculate_rsi(stock_data)
 
         stock_data['Upper Band'], stock_data['Lower Band'] = calculate_bollinger_bands(stock_data)
