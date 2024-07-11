@@ -101,59 +101,58 @@ X_test, y_test = create_datasets(scaled_test_data, 100)
 model_path = 'Stock_Predictions_Model.keras'
 model = load_prediction_model(model_path)
 
+# Debugging: Check shape and type of X_test
+st.sidebar.subheader('Debugging Information')
+st.sidebar.write(f'X_test shape: {X_test.shape}')
+st.sidebar.write(f'X_test dtype: {X_test.dtype}')
+
 # Predict and plot results if the model is loaded
 if model:
-    predictions = model.predict(X_test)
-    predictions = scaler.inverse_transform(predictions)
-    y_test = scaler.inverse_transform(y_test.reshape(-1, 1))
+    try:
+        predictions = model.predict(X_test)
+        predictions = scaler.inverse_transform(predictions)
+        y_test = scaler.inverse_transform(y_test.reshape(-1, 1))
 
-    # Sidebar for debugging information
-    st.sidebar.subheader('Debugging Information')
-    st.sidebar.write(f'Length of y_test: {len(y_test)}')
-    st.sidebar.write(f'Length of predictions: {len(predictions)}')
-    st.sidebar.write('First few values of y_test:')
-    st.sidebar.write(y_test[:10])
-    st.sidebar.write('First few values of predictions:')
-    st.sidebar.write(predictions[:10])
+        # Moving Averages
+        ma_50 = stock_data['Close'].rolling(window=50).mean()
+        ma_100 = stock_data['Close'].rolling(window=100).mean()
+        ma_200 = stock_data['Close'].rolling(window=200).mean()
 
-    # Moving Averages
-    ma_50 = stock_data['Close'].rolling(window=50).mean()
-    ma_100 = stock_data['Close'].rolling(window=100).mean()
-    ma_200 = stock_data['Close'].rolling(window=200).mean()
+        # Plot Moving Averages
+        st.subheader('Price vs 50-Day Moving Average')
+        plot_data([stock_data['Close'], ma_50], 'Price vs 50-Day Moving Average', 'Date', 'Price', ['Price', 'MA50'])
 
-    # Plot Moving Averages
-    st.subheader('Price vs 50-Day Moving Average')
-    plot_data([stock_data['Close'], ma_50], 'Price vs 50-Day Moving Average', 'Date', 'Price', ['Price', 'MA50'])
+        st.subheader('Price vs 50-Day and 100-Day Moving Averages')
+        plot_data([stock_data['Close'], ma_50, ma_100], 'Price vs 50-Day and 100-Day Moving Averages', 'Date', 'Price', ['Price', 'MA50', 'MA100'])
 
-    st.subheader('Price vs 50-Day and 100-Day Moving Averages')
-    plot_data([stock_data['Close'], ma_50, ma_100], 'Price vs 50-Day and 100-Day Moving Averages', 'Date', 'Price', ['Price', 'MA50', 'MA100'])
+        st.subheader('Price vs 100-Day and 200-Day Moving Averages')
+        plot_data([stock_data['Close'], ma_100, ma_200], 'Price vs 100-Day and 200-Day Moving Averages', 'Date', 'Price', ['Price', 'MA100', 'MA200'])
 
-    st.subheader('Price vs 100-Day and 200-Day Moving Averages')
-    plot_data([stock_data['Close'], ma_100, ma_200], 'Price vs 100-Day and 200-Day Moving Averages', 'Date', 'Price', ['Price', 'MA100', 'MA200'])
+        # Plot original vs predicted prices
+        st.subheader('Original Price vs Predicted Price')
+        plot_data([y_test.flatten(), predictions.flatten()], 'Original vs Predicted Price', 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
 
-    # Plot original vs predicted prices
-    st.subheader('Original Price vs Predicted Price')
-    plot_data([y_test.flatten(), predictions.flatten()], 'Original vs Predicted Price', 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
+        # Additional Features
+        st.subheader('Additional Features')
 
-    # Additional Features
-    st.subheader('Additional Features')
+        # RSI Calculation
+        stock_data['RSI'] = calculate_rsi(stock_data)
 
-    # RSI Calculation
-    stock_data['RSI'] = calculate_rsi(stock_data)
+        # Bollinger Bands Calculation
+        stock_data['Upper Band'], stock_data['Lower Band'] = calculate_bollinger_bands(stock_data)
 
-    # Bollinger Bands Calculation
-    stock_data['Upper Band'], stock_data['Lower Band'] = calculate_bollinger_bands(stock_data)
+        # Plot RSI
+        st.subheader('Relative Strength Index (RSI)')
+        plot_data([stock_data['RSI']], 'Relative Strength Index (RSI)', 'Date', 'RSI', ['RSI'])
 
-    # Plot RSI
-    st.subheader('Relative Strength Index (RSI)')
-    plot_data([stock_data['RSI']], 'Relative Strength Index (RSI)', 'Date', 'RSI', ['RSI'])
+        # Plot Bollinger Bands
+        st.subheader('Bollinger Bands')
+        plot_data([stock_data['Close'], stock_data['Upper Band'], stock_data['Lower Band']], 'Bollinger Bands', 'Date', 'Price', ['Price', 'Upper Band', 'Lower Band'])
 
-    # Plot Bollinger Bands
-    st.subheader('Bollinger Bands')
-    plot_data([stock_data['Close'], stock_data['Upper Band'], stock_data['Lower Band']], 'Bollinger Bands', 'Date', 'Price', ['Price', 'Upper Band', 'Lower Band'])
-
-    # Display data with new features
-    st.subheader('Data with RSI and Bollinger Bands')
-    st.write(stock_data)
+        # Display data with new features
+        st.subheader('Data with RSI and Bollinger Bands')
+        st.write(stock_data)
+    except Exception as e:
+        st.error(f'Error during model prediction: {e}')
 else:
     st.error('Model could not be loaded. Please check the file path and model compatibility.')
