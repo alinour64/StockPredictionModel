@@ -3,26 +3,9 @@ import pandas as pd
 import yfinance as yf
 from tensorflow.keras.models import load_model
 import streamlit as st
-import plotly.graph_objs as go
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime
-import talib
-
-# User Authentication
-def login_user(username, password):
-    return username == "admin" and password == "password"
-
-st.sidebar.title("Login")
-username = st.sidebar.text_input("Username")
-password = st.sidebar.text_input("Password", type='password')
-login_button = st.sidebar.button("Login")
-
-if login_button:
-    if login_user(username, password):
-        st.sidebar.success("Login successful!")
-    else:
-        st.sidebar.error("Invalid username or password")
-        st.stop()
 
 # Load the pre-trained model with error handling
 model_path = 'Stock_Predictions_Model.keras'
@@ -76,12 +59,15 @@ if 'model' in locals():
     y_test = scaler.inverse_transform(y_test.reshape(-1, 1))
 
     # Plotting function
-    def plot_interactive_data(data_series, title, xlabel, ylabel, legends):
-        fig = go.Figure()
+    def plot_data(data_series, title, xlabel, ylabel, legends):
+        fig = plt.figure(figsize=(10, 6))
         for series, label in zip(data_series, legends):
-            fig.add_trace(go.Scatter(x=series.index, y=series, mode='lines', name=label))
-        fig.update_layout(title=title, xaxis_title=xlabel, yaxis_title=ylabel)
-        st.plotly_chart(fig)
+            plt.plot(series, label=label)
+        plt.title(title)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.legend()
+        st.pyplot(fig)
 
     # Moving Averages
     ma_50 = stock_data['Close'].rolling(window=50).mean()
@@ -90,16 +76,17 @@ if 'model' in locals():
 
     # Plot Moving Averages
     st.subheader('Price vs 50-Day Moving Average')
-    plot_interactive_data([stock_data['Close'], ma_50], 'Stock Price vs 50-Day Moving Average', 'Date', 'Price', ['Price', 'MA50'])
+    plot_data([stock_data['Close'], ma_50], 'Stock Price vs 50-Day Moving Average', 'Date', 'Price', ['Price', 'MA50'])
 
     st.subheader('Price vs 50-Day and 100-Day Moving Averages')
-    plot_interactive_data([stock_data['Close'], ma_50, ma_100], 'Stock Price vs 50-Day and 100-Day Moving Averages', 'Date', 'Price', ['Price', 'MA50', 'MA100'])
+    plot_data([stock_data['Close'], ma_50, ma_100], 'Stock Price vs 50-Day and 100-Day Moving Averages', 'Date', 'Price', ['Price', 'MA50', 'MA100'])
 
     st.subheader('Price vs 100-Day and 200-Day Moving Averages')
-    plot_interactive_data([stock_data['Close'], ma_100, ma_200], 'Stock Price vs 100-Day and 200-Day Moving Averages', 'Date', 'Price', ['Price', 'MA100', 'MA200'])
+    plot_data([stock_data['Close'], ma_100, ma_200], 'Stock Price vs 100-Day and 200-Day Moving Averages', 'Date', 'Price', ['Price', 'MA100', 'MA200'])
 
+    # Plot original vs predicted prices
     st.subheader('Original Price vs Predicted Price')
-    plot_interactive_data([pd.Series(y_test.flatten(), index=test_data.index), pd.Series(predictions.flatten(), index=test_data.index)], 'Original vs Predicted Stock Prices', 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
+    plot_data([y_test, predictions], 'Original vs Predicted Stock Prices', 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
 
     # Additional Features
     st.subheader('Additional Features')
@@ -115,12 +102,6 @@ if 'model' in locals():
 
     stock_data['RSI'] = calculate_rsi(stock_data)
 
-    # MACD Calculation
-    stock_data['MACD'], stock_data['MACD_Signal'], _ = talib.MACD(stock_data['Close'])
-    
-    # Stochastic Oscillator Calculation
-    stock_data['Slowk'], stock_data['Slowd'] = talib.STOCH(stock_data['High'], stock_data['Low'], stock_data['Close'])
-
     # Bollinger Bands Calculation
     def calculate_bollinger_bands(data, window=20):
         sma = data['Close'].rolling(window=window).mean()
@@ -133,22 +114,14 @@ if 'model' in locals():
 
     # Plot RSI
     st.subheader('Relative Strength Index (RSI)')
-    plot_interactive_data([stock_data['RSI']], 'Relative Strength Index (RSI)', 'Date', 'RSI', ['RSI'])
-
-    # Plot MACD
-    st.subheader('MACD')
-    plot_interactive_data([stock_data['MACD'], stock_data['MACD_Signal']], 'MACD', 'Date', 'Value', ['MACD', 'Signal'])
-
-    # Plot Stochastic Oscillator
-    st.subheader('Stochastic Oscillator')
-    plot_interactive_data([stock_data['Slowk'], stock_data['Slowd']], 'Stochastic Oscillator', 'Date', 'Value', ['Slowk', 'Slowd'])
+    plot_data([stock_data['RSI']], 'Relative Strength Index (RSI)', 'Date', 'RSI', ['RSI'])
 
     # Plot Bollinger Bands
     st.subheader('Bollinger Bands')
-    plot_interactive_data([stock_data['Close'], stock_data['Upper Band'], stock_data['Lower Band']], 'Bollinger Bands', 'Date', 'Price', ['Price', 'Upper Band', 'Lower Band'])
+    plot_data([stock_data['Close'], stock_data['Upper Band'], stock_data['Lower Band']], 'Bollinger Bands', 'Date', 'Price', ['Price', 'Upper Band', 'Lower Band'])
 
     # Display data with new features
-    st.subheader('Data with Technical Indicators')
+    st.subheader('Data with RSI and Bollinger Bands')
     st.write(stock_data)
 else:
     st.error('Model could not be loaded. Please check the file path and model compatibility.')
