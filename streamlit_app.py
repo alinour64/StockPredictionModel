@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime
 
-# Function to load the pre-trained model
+@st.cache_resource(show_spinner=False)
 def load_prediction_model(model_path):
     try:
         model = load_model(model_path)
@@ -43,7 +43,7 @@ def create_datasets(data, window_size):
     return np.array(X), np.array(y)
 
 # Plotting function with Plotly
-def plot_data(data_series, title, xlabel, ylabel, legends):
+def plot_data(data_series, xlabel, ylabel, legends):
     fig = go.Figure()
     for series, label in zip(data_series, legends):
         fig.add_trace(go.Scatter(y=series, mode='lines', name=label))
@@ -120,17 +120,17 @@ if model:
 
         # Plot Moving Averages
         st.subheader('Price vs 50-Day Moving Average')
-        plot_data([stock_data['Close'], ma_50], 'Price vs 50-Day Moving Average', 'Date', 'Price', ['Price', 'MA50'])
+        plot_data([stock_data['Close'], ma_50], 'Date', 'Price', ['Price', 'MA50'])
 
         st.subheader('Price vs 50-Day and 100-Day Moving Averages')
-        plot_data([stock_data['Close'], ma_50, ma_100], 'Price vs 50-Day and 100-Day Moving Averages', 'Date', 'Price', ['Price', 'MA50', 'MA100'])
+        plot_data([stock_data['Close'], ma_50, ma_100], 'Date', 'Price', ['Price', 'MA50', 'MA100'])
 
         st.subheader('Price vs 100-Day and 200-Day Moving Averages')
-        plot_data([stock_data['Close'], ma_100, ma_200], 'Price vs 100-Day and 200-Day Moving Averages', 'Date', 'Price', ['Price', 'MA100', 'MA200'])
+        plot_data([stock_data['Close'], ma_100, ma_200], 'Date', 'Price', ['Price', 'MA100', 'MA200'])
 
         # Plot original vs predicted prices
         st.subheader('Original Price vs Predicted Price')
-        plot_data([y_test.flatten(), predictions.flatten()], 'Original vs Predicted Price', 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
+        plot_data([y_test.flatten(), predictions.flatten()], 'Time (Number of Days)', 'Price', ['Original Price', 'Predicted Price'])
 
         # Additional Features
         st.subheader('Additional Features')
@@ -143,11 +143,11 @@ if model:
 
         # Plot RSI
         st.subheader('Relative Strength Index (RSI)')
-        plot_data([stock_data['RSI']], 'Relative Strength Index (RSI)', 'Date', 'RSI', ['RSI'])
+        plot_data([stock_data['RSI']], 'Date', 'RSI', ['RSI'])
 
         # Plot Bollinger Bands
         st.subheader('Bollinger Bands')
-        plot_data([stock_data['Close'], stock_data['Upper Band'], stock_data['Lower Band']], 'Bollinger Bands', 'Date', 'Price', ['Price', 'Upper Band', 'Lower Band'])
+        plot_data([stock_data['Close'], stock_data['Upper Band'], stock_data['Lower Band']], 'Date', 'Price', ['Price', 'Upper Band', 'Lower Band'])
 
         # Display data with new features
         st.subheader('Data with RSI and Bollinger Bands')
