@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime
 
-@st.cache_resource(show_spinner=False, suppress_st_warning=True)
+@st.cache_resource(show_spinner=False)
 def load_prediction_model(model_path):
     try:
         model = load_model(model_path)
