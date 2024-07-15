@@ -1,4 +1,4 @@
-**Stock Market Prediction Application**
+# Stock Market Prediction Application
 
 **Overview**
 
