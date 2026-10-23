@@ -17,7 +17,7 @@ def load_prediction_model(model_path):
         return None
 
 def get_stock_data(ticker, start, end):
-    data = yf.download(ticker, start=start, end=end, progress=False)
+    data = yf.download(ticker, start=start, end=end, progress=False, auto_adjust=False, multi_level_index=False)
     return data
 
 def scale_data(data):
@@ -66,6 +66,10 @@ start_date = st.date_input('Start Date', datetime(2000, 1, 1))
 end_date = st.date_input('End Date', datetime.today())
 
 stock_data = get_stock_data(stock_ticker, start_date, end_date)
+
+if len(stock_data) < 250:
+    st.error('Not enough price data for that ticker and date range. Try another ticker or a longer range.')
+    st.stop()
 
 st.subheader('Stock Data')
 st.write(stock_data)

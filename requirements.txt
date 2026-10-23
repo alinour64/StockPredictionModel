@@ -1,7 +1,8 @@
 numpy==1.26.4
 pandas==2.2.2
-yfinance==0.2.40
+yfinance==1.7.0
 tensorflow==2.16.2
 streamlit==1.36.0
 plotly==5.22.0
 scikit-learn==1.5.1
+pyarrow==17.0.0
